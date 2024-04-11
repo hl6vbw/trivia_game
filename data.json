@@ -36,6 +36,24 @@
                 "green",
                 "tea leaves"
             ]
+        },
+        {
+            "category": " tea",
+            "words": [
+                "a",
+                "b",
+                "c",
+                "d"
+            ]
+        },
+        {
+            "category": "the history of tea",
+            "words": [
+                "1",
+                "2",
+                "3",
+                "4"
+            ]
         }
     ]
 }
