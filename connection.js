@@ -89,12 +89,34 @@ function newGame() {
     getRandomCategories(setUpNewGame);
 }
 
+// function setUpNewGame(categories) {
+//     const table = document.getElementById('table');
+//     table.innerHTML = ''; 
+//     let htmlContent = '<tbody>';
+
+    
+//     categories.categories.forEach((category, index) => {
+//         htmlContent += '<tr>'; 
+//         category.words.forEach(word => {
+//             htmlContent += `<td onclick="selectWord(this)">${word}</td>`;
+//         });
+//         htmlContent += '</tr>'; 
+//     });
+
+//     htmlContent += '</tbody>';
+//     table.innerHTML = htmlContent;
+//     localStorage.setItem('triviaCategories', JSON.stringify(categories));
+
+// }
+
+
 function setUpNewGame(categories) {
     const table = document.getElementById('table');
     table.innerHTML = ''; 
     let htmlContent = '<tbody>';
 
-    
+    // Removed the automatic shuffling here
+
     categories.categories.forEach((category, index) => {
         htmlContent += '<tr>'; 
         category.words.forEach(word => {
@@ -106,9 +128,7 @@ function setUpNewGame(categories) {
     htmlContent += '</tbody>';
     table.innerHTML = htmlContent;
     localStorage.setItem('triviaCategories', JSON.stringify(categories));
-
 }
-
 
 function selectWord(td) {
     if (td.classList.contains('selected')) {
@@ -132,3 +152,23 @@ function updateSelectedGuess() {
     selectedGuess.textContent = content;
 }
 
+
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        // Generate a random index from 0 to i
+        let j = Math.floor(Math.random() * (i + 1)); 
+        // Swap elements array[i] and array[j]
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
+function shuffle() {
+    
+    const categories = JSON.parse(localStorage.getItem('triviaCategories'));
+    if (categories) {
+        categories.categories.forEach(category => {
+            shuffleArray(category.words); 
+        });
+        setUpNewGame(categories); 
+    }
+}
