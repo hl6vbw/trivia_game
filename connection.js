@@ -131,7 +131,7 @@ function setUpNewGame(categories) {
     categories.categories.forEach((category, index) => {
         htmlContent += '<tr>'; 
         category.words.forEach(word => {
-            htmlContent += `<td onclick="selectWord(this)">${word}</td>`;
+            htmlContent += `<td class="red-line" onclick="selectWord(this)">${word}</td>`;
         });
         htmlContent += '</tr>'; 
     });
@@ -251,9 +251,6 @@ function clearHistory() {
 
     document.getElementById('guess-count').textContent = '0'; 
     document.getElementById('previous-guesses').innerHTML = '';
-
-
-    showMessage('Guess history cleared.');
     
     // Display a message to the user indicating the history has been cleared
     showMessage('Game history cleared.');
