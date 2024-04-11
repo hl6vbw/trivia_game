@@ -59,10 +59,35 @@ async function getRandomCategories(callback) {
     callback(newCategories);
 }
 
+       
+var selectedContents = [];
+function colour(td){
+    if (td.classList.contains('selected')) {
+        td.classList.remove('selected');
+        var index = selectedContents.indexOf(td.textContent);
+        if (index !== -1) {
+            selectedContents.splice(index, 1);
+        }
+    } else {
+        td.classList.add('selected');
+        selectedContents.push(td.textContent);
+    }
+    var cellText = td.textContent;
+    document.getElementById("selected-guess").innerText = "Selected Content: " +  selectedContents.join(', ');
+    document.getElementById("guesses").value = JSON.stringify(selectedContents);
+
+}
+        
 function submitGuess() {
     // Logic to check if guess is correct
     // Update game statistics and prior guesses display accordingly
-    const tbl = document.getElementById('table');
+    
+    
+}
+function generateRandomTable(categories) {
+  // Assuming categories is an array of category objects with each object having a 'name' and 'words' property
+  //sample
+  const tbl = document.getElementById('table');
     for (let i = 0; i < 3; i++) {
         const tr = tbl.insertRow();
         for (let j = 0; j < 2; j++) {
@@ -79,5 +104,4 @@ function submitGuess() {
         }
       }
       body.appendChild(tbl);
-    
 }
