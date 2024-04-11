@@ -12,31 +12,46 @@
  * asynchronously, so you should treat your function like you would an event
  * handler.
  */
+// function queryCategories() {
+//     return new Promise( resolve => {
+//             // instantiate the object
+//             var ajax = new XMLHttpRequest();
+//             // open the request
+//             //ajax.open("GET", "https://cs4640.cs.virginia.edu/homework/connections.php", true);
+//             //ajax.open("GET", "/data.json", true);
+//             // ask for a specific response
+//             ajax.responseType = "json";
+//             // send the request
+//             ajax.send(null);
+            
+//             // What happens if the load succeeds
+//             ajax.addEventListener("load", function() {
+//                 // Return the word as the fulfillment of the promise 
+//                 if (this.status == 200) { // worked 
+//                     resolve(this.response);
+//                 } else {
+//                     console.log("When trying to get a new set of categories, the server returned an HTTP error code.");
+//                 }
+//             });
+            
+//             // What happens on error
+//             ajax.addEventListener("error", function() {
+//                 console.log("When trying to get a new set of categories, the connection to the server failed.");
+//             });
+//     });
+// }
+
 function queryCategories() {
-    return new Promise( resolve => {
-            // instantiate the object
-            var ajax = new XMLHttpRequest();
-            // open the request
-            ajax.open("GET", "https://cs4640.cs.virginia.edu/homework/connections.php", true);
-            // ask for a specific response
-            ajax.responseType = "json";
-            // send the request
-            ajax.send(null);
-            
-            // What happens if the load succeeds
-            ajax.addEventListener("load", function() {
-                // Return the word as the fulfillment of the promise 
-                if (this.status == 200) { // worked 
-                    resolve(this.response);
-                } else {
-                    console.log("When trying to get a new set of categories, the server returned an HTTP error code.");
+    return new Promise(resolve => {
+        fetch('data.json') 
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('error');
                 }
-            });
-            
-            // What happens on error
-            ajax.addEventListener("error", function() {
-                console.log("When trying to get a new set of categories, the connection to the server failed.");
-            });
+                return response.json();
+            })
+            .then(data => resolve(data))
+            .catch(error => console.error('Error while fetching categories:', error));
     });
 }
 
@@ -58,73 +73,53 @@ async function getRandomCategories(callback) {
     var newCategories = await queryCategories();
     callback(newCategories);
 }
-function generateRandomTable(categories) {
-  // Assuming categories is an array of category objects with each object having a 'name' and 'words' property
-  //sample
-  var tableHTML = '<table>';
+
+document.addEventListener('DOMContentLoaded', function() {
+    newGame(); 
+});
+
+function newGame() {
+    getRandomCategories(setUpNewGame);
+}
+
+function setUpNewGame(categories) {
+    const table = document.getElementById('table');
+    table.innerHTML = ''; 
+    let htmlContent = '<tbody>';
+
     
-    // Iterate over each category
-    categories.forEach(function(category) {
-        // Add category name as table header
-        tableHTML += '<tr><th colspan="4">' + category.name + '</th></tr>';
-        
-        // Add words for this category
-        for (var i = 0; i < category.words.length; i += 4) {
-            var row = '<tr>';
-            for (var j = i; j < i + 4 && j < category.words.length; j++) {
-                row += '<td>' + category.words[j] + '</td>';
-            }
-            row += '</tr>';
-            tableHTML += row;
-        }
+    categories.categories.forEach((category, index) => {
+        htmlContent += '<tr>'; 
+        category.words.forEach(word => {
+            htmlContent += `<td onclick="selectWord(this)">${word}</td>`;
+        });
+        htmlContent += '</tr>'; 
     });
-    
-    tableHTML += '</table>';
-    
-    return tableHTML;
-}
-function setUpNewGame(newCategories) {
-  var tableHTML = generateRandomTable(newCategories);
-  
-  // Assuming you have a div with id 'game-table' where you want to insert the table
-  document.getElementById('game-table').innerHTML = tableHTML;
+
+    htmlContent += '</tbody>';
+    table.innerHTML = htmlContent;
 }
 
-getRandomCategories(setUpNewGame);
 
-var selectedContents = [];
-function colour(td){
+function selectWord(td) {
     if (td.classList.contains('selected')) {
         td.classList.remove('selected');
-        var index = selectedContents.indexOf(td.textContent);
-        if (index !== -1) {
-            selectedContents.splice(index, 1);
-        }
     } else {
         td.classList.add('selected');
-        selectedContents.push(td.textContent);
     }
-    var cellText = td.textContent;
-    document.getElementById("selected-guess").innerText = "Selected Content: " +  selectedContents.join(', ');
-    document.getElementById("guesses").value = JSON.stringify(selectedContents);
 
-}
-        
-function submitGuess() {
-    // Logic to check if guess is correct
-    // Update game statistics and prior guesses display accordingly
-    
+    updateSelectedGuess();
 }
 
-function shuffle(){
+function updateSelectedGuess() {
+    const selectedWords = document.querySelectorAll('.selected');
+    const selectedGuess = document.getElementById('selected-guess');
+    let content = 'Selected Content: ';
+    selectedWords.forEach(word => {
+        content += word.textContent + ', ';
+    });
+    content = content.replace(/, $/, '');
 
+    selectedGuess.textContent = content;
 }
 
-function newGame(){}
-
-function clearHistory(){}
-
-function showMessage(message) {
-    const messageDiv = document.getElementById("message");
-    messageDiv.textContent = message;
-}
