@@ -233,7 +233,20 @@ function shuffle(){
 }
 
 
-function clearHistory(){}
+function clearHistory() {
+    localStorage.removeItem('guess'); 
+    localStorage.removeItem('previousGuess'); 
+
+
+    document.getElementById('guess-count').textContent = '0'; 
+    document.getElementById('previous-guesses').innerHTML = '';
+
+
+    showMessage('Guess history cleared.');
+    
+    // Display a message to the user indicating the history has been cleared
+    showMessage('Game history cleared.');
+}
 
 function showMessage(message) {
     const messageDiv = document.getElementById("message");
@@ -241,7 +254,7 @@ function showMessage(message) {
 }
 
 
-function clearHistory(){}
+
 
 function showMessage(message) {
     const messageDiv = document.getElementById("message");
