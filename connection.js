@@ -90,6 +90,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function newGame() {
     localStorage.removeItem('triviaCategories');
+    localStorage.removeItem('previousGuess');
+    localStorage.removeItem('guess');
+    showGuess();
+    var list = document.getElementById("previous-guesses");
+    list.innerHTML = '';
+    var guess = localStorage.getItem('guess');
+    var numgames = localStorage.getItem('numgames');
     getRandomCategories(setUpNewGame);
 }
 
@@ -163,7 +170,6 @@ function selectWord(td) {
 // }
         
 function submitGuess() {
-
     var strarray = selectedContents.join(" ");
   // assuming table stored in localstorage
   // var categories = localStorage.getItem('myArray');
@@ -195,7 +201,12 @@ function incrementGuess(){
 function showGuess(){
     var guess = localStorage.getItem('guess');
     const showguess = document.getElementById("guess-count");
-    showguess.textContent = guess;
+    if(guess){
+        showguess.textContent = guess;
+    }else{
+        showguess.textContent = '0';
+    }
+    
 }
 
 function updatepreviousGuess(strarray){
@@ -233,7 +244,9 @@ function shuffle(){
 }
 
 
-function clearHistory(){}
+function clearHistory(){
+    
+}
 
 function showMessage(message) {
     const messageDiv = document.getElementById("message");
