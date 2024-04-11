@@ -77,11 +77,15 @@ async function getRandomCategories(callback) {
 document.addEventListener('DOMContentLoaded', function() {
     // Load game from Local Storage if available
     const savedCategories = localStorage.getItem('triviaCategories');
+    
+    
     if (savedCategories) {
         setUpNewGame(JSON.parse(savedCategories));
     } else {
         newGame(); // Generate a new game setup if nothing is saved
     }
+    showPrevGuesses();
+    showGuess();
 });
 
 function newGame() {
@@ -129,34 +133,44 @@ function setUpNewGame(categories) {
     table.innerHTML = htmlContent;
     localStorage.setItem('triviaCategories', JSON.stringify(categories));
 }
+var selectedContents = [];
 
 function selectWord(td) {
     if (td.classList.contains('selected')) {
         td.classList.remove('selected');
+        var index = selectedContents.indexOf(td.textContent);
+        if (index !== -1) {
+            selectedContents.splice(index, 1);
+        }
     } else {
         td.classList.add('selected');
+        selectedContents.push(td.textContent);
     }
 
-    updateSelectedGuess();
+    var cellText = td.textContent;
+    document.getElementById("selected-guess").innerText = "Selected Content: " +  selectedContents.join(', ');
+    document.getElementById("guesses").value = JSON.stringify(selectedContents);
 }
 
-function updateSelectedGuess() {
-    const selectedWords = document.querySelectorAll('.selected');
-    const selectedGuess = document.getElementById('selected-guess');
-    let content = 'Selected Content: ';
-    selectedWords.forEach(word => {
-        content += word.textContent + ', ';
-    });
-    content = content.replace(/, $/, '');
-}
+// function updateSelectedGuess() {
+//     const selectedWords = document.querySelectorAll('.selected');
+//     const selectedGuess = document.getElementById('selected-guess');
+//     let content = 'Selected Content: ';
+//     selectedWords.forEach(word => {
+//         content += word.textContent + ', ';
+//     });
+//     content = content.replace(/, $/, '');
+// }
         
 function submitGuess() {
+
+    var strarray = selectedContents.join(" ");
   // assuming table stored in localstorage
   // var categories = localStorage.getItem('myArray');
     // Logic to check if guess is correct
     // Update game statistics and prior guesses display accordingly
   incrementGuess();
-  updatepreviousGuess();
+  updatepreviousGuess(strarray);
   // selectedContents.forEach(function(item){
   //   var td = findTableCell(table, item);
   //   if (td) {
@@ -175,21 +189,43 @@ function incrementGuess(){
   }
   var incrementedGuess = guessnum + 1;
   localStorage.setItem('guess', incrementedGuess);
-  const showguess = document.getElementById("guess-count");
-  showguess.textContent = incrementedGuess.toString();
+  showGuess();
 }
 
-function updatepreviousGuess(){
-  var previousguess = localStorage.getItem('previousGuess');
-  
-  var list = document.getElementById("previous-guesses");
-  var strarray = selectedContents.join(" ");
+function showGuess(){
+    var guess = localStorage.getItem('guess');
+    const showguess = document.getElementById("guess-count");
+    showguess.textContent = guess;
+}
 
-  var newitem = document.createElement("li");
-  newitem.textContent= strarray;
-  
-  list.appendChild(newitem);
+function updatepreviousGuess(strarray){
+    var previousGuess = localStorage.getItem('previousGuess');
+    if (previousGuess) {
+        previousGuess += "|" + strarray;
+    } else {
+        previousGuess = strarray;
+    }
 
+    // Store the updated value back in localStorage
+    localStorage.setItem('previousGuess', previousGuess);
+
+    showPrevGuesses();
+
+}
+function showPrevGuesses() {
+    var previousGuess = localStorage.getItem('previousGuess');
+    var list = document.getElementById("previous-guesses");
+    list.innerHTML = ''; // Clear the list before adding new items
+
+    // Split the previousGuess string into an array of individual guesses
+    var guesses = previousGuess.split("|");
+
+    // Loop through the array of guesses and add each one as a list item
+    guesses.forEach(function(guess) {
+        var newitem = document.createElement("li");
+        newitem.textContent = guess;
+        list.appendChild(newitem);
+    });
 }
 function shuffle(){
 
