@@ -156,7 +156,8 @@ function selectWord(td) {
 
     var cellText = td.textContent;
     document.getElementById("selected-guess").innerText = "Selected Content: " +  selectedContents.join(', ');
-    document.getElementById("guesses").value = JSON.stringify(selectedContents);
+
+    // document.getElementById("guesses").value = JSON.stringify(selectedContents);
 }
 
 // function updateSelectedGuess() {
@@ -170,13 +171,53 @@ function selectWord(td) {
 // }
         
 function submitGuess() {
+    var categories = JSON.parse(localStorage.getItem('triviaCategories')).categories;
+    // var categories = [];
+    var correct = {};
+    var max = 0;
+    var maxcategory = '';
+    var message = document.getElementById("message");
     var strarray = selectedContents.join(" ");
-  // assuming table stored in localstorage
-  // var categories = localStorage.getItem('myArray');
-    // Logic to check if guess is correct
-    // Update game statistics and prior guesses display accordingly
-  incrementGuess();
-  updatepreviousGuess(strarray);
+  
+    // try {
+    //     categories = JSON.parse(categoriesData).categories;
+    // } catch (error) {
+    //     console.error('Error parsing triviaCategories:', error);
+    // }
+    updatepreviousGuess(strarray);
+    if(selectedContents && categories){
+        
+        categories.forEach(function(category) {
+            correct[category.category] = 0;
+            category.words.forEach(word => {
+                if (selectedContents.includes(word)) {
+                    correct[category.category] += 1;
+                }
+            });
+        });
+        max = Math.max(...Object.values(correct)); // Find the maximum count
+        maxcategory = Object.keys(correct).find(key => correct[key] === max); // Find the category with the maximum count
+        
+        incrementGuess();
+        if(max <=1){
+            message.innerHTML = 'None of yoour choices were in the same category';
+        }else if(max<4){
+            message.innerHTML = max.toString() + ' are in the same category';
+        }else if(max==4){
+            message.innerHTML = 'Well done';
+            categories.forEach(function(category) {
+                if (category.category === maxcategory) {
+                    category.words = []; // Remove all words from the category
+                }
+            });
+            localStorage.setItem('triviaCategories', JSON.stringify(categories));
+    
+        }
+        
+    }
+    
+
+    
   // selectedContents.forEach(function(item){
   //   var td = findTableCell(table, item);
   //   if (td) {
