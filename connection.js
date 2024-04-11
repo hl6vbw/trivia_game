@@ -128,7 +128,92 @@ function updateSelectedGuess() {
         content += word.textContent + ', ';
     });
     content = content.replace(/, $/, '');
+}
+        
+function submitGuess() {
+  // assuming table stored in localstorage
+  // var categories = localStorage.getItem('myArray');
+    // Logic to check if guess is correct
+    // Update game statistics and prior guesses display accordingly
+  incrementGuess();
+  updatepreviousGuess();
+  // selectedContents.forEach(function(item){
+  //   var td = findTableCell(table, item);
+  //   if (td) {
+  //       colour(td);
+  //   }
+  // })
+  // selectedContents = [];
+    
+}
+
+function incrementGuess(){
+  var guess = localStorage.getItem('guess');
+  var guessnum = parseInt(guess);
+  if (isNaN(guessnum)) {
+    guessnum = 0;
+  }
+  var incrementedGuess = guessnum + 1;
+  localStorage.setItem('guess', incrementedGuess);
+  const showguess = document.getElementById("guess-count");
+  showguess.textContent = incrementedGuess.toString();
+}
+
+function updatepreviousGuess(){
+  var previousguess = localStorage.getItem('previousGuess');
+  
+  var list = document.getElementById("previous-guesses");
+  var strarray = selectedContents.join(" ");
+
+  var newitem = document.createElement("li");
+  newitem.textContent= strarray;
+  
+  list.appendChild(newitem);
+
+}
+function shuffle(){
 
     selectedGuess.textContent = content;
 }
 
+function newGame(){}
+
+function clearHistory(){}
+
+function showMessage(message) {
+    const messageDiv = document.getElementById("message");
+    messageDiv.textContent = message;
+}
+
+
+function createTable() {
+  const table = document.getElementById("table");
+  table.classList.add("table-bordered");
+  array = [0,1,2,3];
+  for (let i = 0; i < 4; i++) {
+      const row = document.createElement("tr");
+      for (let j = 0; j < 4; j++) {
+        array[i]=j;
+          const cell = document.createElement("td");
+          cell.textContent = "Cell " + ((i * 4) + j + 1);
+          cell.onclick = function() {
+              colour(this);
+          };
+          row.appendChild(cell);
+      }
+      table.appendChild(row);
+  }
+  localStorage.setItem("")
+
+  return table;
+}
+
+// Function to append the table to a container
+function appendTable(container) {
+  const table = createTable();
+  container.appendChild(table);
+}
+
+// Example usage:
+const container = document.getElementById("container");
+appendTable(container);
