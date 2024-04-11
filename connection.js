@@ -75,10 +75,17 @@ async function getRandomCategories(callback) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    newGame(); 
+    // Load game from Local Storage if available
+    const savedCategories = localStorage.getItem('triviaCategories');
+    if (savedCategories) {
+        setUpNewGame(JSON.parse(savedCategories));
+    } else {
+        newGame(); // Generate a new game setup if nothing is saved
+    }
 });
 
 function newGame() {
+    localStorage.removeItem('triviaCategories');
     getRandomCategories(setUpNewGame);
 }
 
@@ -98,6 +105,8 @@ function setUpNewGame(categories) {
 
     htmlContent += '</tbody>';
     table.innerHTML = htmlContent;
+    localStorage.setItem('triviaCategories', JSON.stringify(categories));
+
 }
 
 
