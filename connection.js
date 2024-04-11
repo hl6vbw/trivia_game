@@ -176,7 +176,6 @@ function shuffle(){
     selectedGuess.textContent = content;
 }
 
-function newGame(){}
 
 function clearHistory(){}
 
@@ -185,35 +184,3 @@ function showMessage(message) {
     messageDiv.textContent = message;
 }
 
-
-function createTable() {
-  const table = document.getElementById("table");
-  table.classList.add("table-bordered");
-  array = [0,1,2,3];
-  for (let i = 0; i < 4; i++) {
-      const row = document.createElement("tr");
-      for (let j = 0; j < 4; j++) {
-        array[i]=j;
-          const cell = document.createElement("td");
-          cell.textContent = "Cell " + ((i * 4) + j + 1);
-          cell.onclick = function() {
-              colour(this);
-          };
-          row.appendChild(cell);
-      }
-      table.appendChild(row);
-  }
-  localStorage.setItem("")
-
-  return table;
-}
-
-// Function to append the table to a container
-function appendTable(container) {
-  const table = createTable();
-  container.appendChild(table);
-}
-
-// Example usage:
-const container = document.getElementById("container");
-appendTable(container);
