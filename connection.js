@@ -58,8 +58,40 @@ async function getRandomCategories(callback) {
     var newCategories = await queryCategories();
     callback(newCategories);
 }
+function generateRandomTable(categories) {
+  // Assuming categories is an array of category objects with each object having a 'name' and 'words' property
+  //sample
+  var tableHTML = '<table>';
+    
+    // Iterate over each category
+    categories.forEach(function(category) {
+        // Add category name as table header
+        tableHTML += '<tr><th colspan="4">' + category.name + '</th></tr>';
+        
+        // Add words for this category
+        for (var i = 0; i < category.words.length; i += 4) {
+            var row = '<tr>';
+            for (var j = i; j < i + 4 && j < category.words.length; j++) {
+                row += '<td>' + category.words[j] + '</td>';
+            }
+            row += '</tr>';
+            tableHTML += row;
+        }
+    });
+    
+    tableHTML += '</table>';
+    
+    return tableHTML;
+}
+function setUpNewGame(newCategories) {
+  var tableHTML = generateRandomTable(newCategories);
+  
+  // Assuming you have a div with id 'game-table' where you want to insert the table
+  document.getElementById('game-table').innerHTML = tableHTML;
+}
 
-       
+getRandomCategories(setUpNewGame);
+
 var selectedContents = [];
 function colour(td){
     if (td.classList.contains('selected')) {
@@ -82,26 +114,17 @@ function submitGuess() {
     // Logic to check if guess is correct
     // Update game statistics and prior guesses display accordingly
     
-    
 }
-function generateRandomTable(categories) {
-  // Assuming categories is an array of category objects with each object having a 'name' and 'words' property
-  //sample
-  const tbl = document.getElementById('table');
-    for (let i = 0; i < 3; i++) {
-        const tr = tbl.insertRow();
-        for (let j = 0; j < 2; j++) {
-          if (i === 2 && j === 1) {
-            break;
-          } else {
-            const td = tr.insertCell();
-            td.appendChild(document.createTextNode(`Cell I${i}/J${j}`));
-            td.style.border = '1px solid black';
-            if (i === 1 && j === 1) {
-              td.setAttribute('rowSpan', '2');
-            }
-          }
-        }
-      }
-      body.appendChild(tbl);
+
+function shuffle(){
+
+}
+
+function newGame(){}
+
+function clearHistory(){}
+
+function showMessage(message) {
+  const messageDiv = document.getElementById("message");
+  messageDiv.textContent = message;
 }

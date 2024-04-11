@@ -47,43 +47,42 @@
                 
             </div>
         </div>
-
+        <div id="message"></div>
         <div class="row">
             <div class="col-xs-12">
-            
-
                 <div class="card">
                     <div class="card-header">
                         Game Table
                     </div>
-
                     <div class="card-body">
-    <div class="row">
-        <div class="col-xs-12">
-            <h3>Words</h3>
-            <table id="table">
-                <!-- Table of words will be populated dynamically using JavaScript -->
-            </table>
-        </div>
-    </div>
-</div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <h3>Words</h3>
+                                <table id="table">
+                                    <!-- Table of words will be populated dynamically using JavaScript -->
+                                </table>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
 
             </div>
             <div id="selected-guess">Selected Content:</div>
-            <button id="submitGuess" onclick="submitGuess()">Submit Guess</button>
-
-            <button id="shuffle">Shuffle</button>
-            <button id="newGame">New Game</button>
-            <div>
-                
-                <h4>Previous Guesses:</h4>
-                <p class="btn btn-primary">Clear History</p>
-                <ul id="history">
-                    <!-- List of prior guesses will be populated dynamically using JavaScript -->
-                </ul>
+            <div class="row">
+                <div class="col-xs-12">
+                    <button onclick="submitGuess()">Submit Guesses</button>
+                    <button onclick="shuffle()">Play Again</button>
+                    <button onclick="newGame()">Logout</button>
+                </div>
             </div>
+            <div>
+                <h3>Guess Count: <span id="guess-count"></span></h3>
+                <h4>Previous Guesses:</h4>
+                <button onclick="clearHistory()">Clear History</button>
+                <ul id="previous-guesses"></ul>
+            </div>
+            
             <section id="gameStats">
                 <h2>Game Statistics</h2>
                 <p>Games Played: <span id="gamesPlayed">0</span></p>
@@ -91,11 +90,7 @@
                 <p>Win Streak: <span id="winStreak">0</span></p>
                 <p>Average Guesses/Game: <span id="avgGuesses">0</span></p>
             </section>
-            <section id="clearHistory">
-                <h2>Clear History</h2>
-                <button id="clearHistoryBtn">Clear History</button>
-            </section>
-            
+           
         </div>
     </div>
 
