@@ -1,0 +1,41 @@
+{
+    "result": "success",
+    "categories": [
+        {
+            "category": "Elden Ring",
+            "words": [
+                "Tarnished",
+                "Margit",
+                "The Lands Between",
+                "Grace"
+            ]
+        },
+        {
+            "category": "Pokemon",
+            "words": [
+                "Pikachu",
+                "Charizard",
+                "Geodude",
+                "Eevee"
+            ]
+        },
+        {
+            "category": "Classical Music",
+            "words": [
+                "Music",
+                "Songs",
+                "Broadway",
+                "Opera"
+            ]
+        },
+        {
+            "category": "the history of tea",
+            "words": [
+                "tea",
+                "britain",
+                "green",
+                "tea leaves"
+            ]
+        }
+    ]
+}

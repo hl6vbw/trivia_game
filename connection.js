@@ -125,6 +125,6 @@ function newGame(){}
 function clearHistory(){}
 
 function showMessage(message) {
-  const messageDiv = document.getElementById("message");
-  messageDiv.textContent = message;
+    const messageDiv = document.getElementById("message");
+    messageDiv.textContent = message;
 }
