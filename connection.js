@@ -148,8 +148,68 @@ function updateSelectedGuess() {
         content += word.textContent + ', ';
     });
     content = content.replace(/, $/, '');
+}
+        
+function submitGuess() {
+  // assuming table stored in localstorage
+  // var categories = localStorage.getItem('myArray');
+    // Logic to check if guess is correct
+    // Update game statistics and prior guesses display accordingly
+  incrementGuess();
+  updatepreviousGuess();
+  // selectedContents.forEach(function(item){
+  //   var td = findTableCell(table, item);
+  //   if (td) {
+  //       colour(td);
+  //   }
+  // })
+  // selectedContents = [];
+    
+}
+
+function incrementGuess(){
+  var guess = localStorage.getItem('guess');
+  var guessnum = parseInt(guess);
+  if (isNaN(guessnum)) {
+    guessnum = 0;
+  }
+  var incrementedGuess = guessnum + 1;
+  localStorage.setItem('guess', incrementedGuess);
+  const showguess = document.getElementById("guess-count");
+  showguess.textContent = incrementedGuess.toString();
+}
+
+function updatepreviousGuess(){
+  var previousguess = localStorage.getItem('previousGuess');
+  
+  var list = document.getElementById("previous-guesses");
+  var strarray = selectedContents.join(" ");
+
+  var newitem = document.createElement("li");
+  newitem.textContent= strarray;
+  
+  list.appendChild(newitem);
+
+}
+function shuffle(){
 
     selectedGuess.textContent = content;
+}
+
+
+function clearHistory(){}
+
+function showMessage(message) {
+    const messageDiv = document.getElementById("message");
+    messageDiv.textContent = message;
+}
+
+
+function clearHistory(){}
+
+function showMessage(message) {
+    const messageDiv = document.getElementById("message");
+    messageDiv.textContent = message;
 }
 
 
