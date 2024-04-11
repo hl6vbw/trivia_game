@@ -71,7 +71,6 @@ function queryCategories() {
  */
 async function getRandomCategories(callback) {
     var newCategories = await queryCategories();
-    newCategories = array_rand($newCategories, 4);
     callback(newCategories);
 }
 
