@@ -140,6 +140,28 @@ function setUpNewGame(categories) {
     table.innerHTML = htmlContent;
     localStorage.setItem('triviaCategories', JSON.stringify(categories));
 }
+
+function displaytable(shuffledarray) {
+    const table = document.getElementById('table');
+    table.innerHTML = ''; 
+    let htmlContent = '<tbody>';
+    var ind = 0;
+
+    // Removed the automatic shuffling here
+    for (let i = 0; i < 4; i++) {
+        htmlContent += '<tr>';
+        for (let j = 0; j < 4; j++) {
+            htmlContent += `<td class="red-line" onclick="selectWord(this)">${shuffledarray[ind]}</td>`;
+            ind += 1;
+        }
+        htmlContent += '</tr>'; 
+    }
+    htmlContent += '</tbody>';
+    
+    table.innerHTML = htmlContent;
+    localStorage.setItem('shuffledarray', JSON.stringify(shuffledarray));
+}
+
 var selectedContents = [];
 
 function selectWord(td) {
@@ -185,6 +207,7 @@ function submitGuess() {
     //     console.error('Error parsing triviaCategories:', error);
     // }
     updatepreviousGuess(strarray);
+    incrementGuess();
     if(selectedContents && categories){
         
         categories.forEach(function(category) {
@@ -198,7 +221,7 @@ function submitGuess() {
         max = Math.max(...Object.values(correct)); // Find the maximum count
         maxcategory = Object.keys(correct).find(key => correct[key] === max); // Find the category with the maximum count
         
-        incrementGuess();
+        
         if(max <=1){
             message.innerHTML = 'None of yoour choices were in the same category';
         }else if(max<4){
@@ -215,7 +238,7 @@ function submitGuess() {
         }
         
     }
-    
+    selectedContents = [];
 
     
   // selectedContents.forEach(function(item){
@@ -321,12 +344,25 @@ function shuffleArray(array) {
 }
 
 function shuffle() {
-    
+    var randomarray = [];
     const categories = JSON.parse(localStorage.getItem('triviaCategories'));
+    // if (categories) {
+    //     categories.categories.forEach(category => {
+            
+    //         shuffleArray(category.words); 
+    //     });
+    //     setUpNewGame(categories); 
+    // }
     if (categories) {
         categories.categories.forEach(category => {
-            shuffleArray(category.words); 
+            category.words.forEach(function(word){
+                randomarray.push(word);
+            })
+            
+            
         });
-        setUpNewGame(categories); 
+        shuffleArray(randomarray); 
+        displaytable(randomarray);
+        // setUpNewGame(categories); 
     }
 }
