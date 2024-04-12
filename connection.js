@@ -75,14 +75,14 @@ async function getRandomCategories(callback) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Load game from Local Storage if available
+
     const savedCategories = localStorage.getItem('triviaCategories');
     
     
     if (savedCategories) {
         setUpNewGame(JSON.parse(savedCategories));
     } else {
-        newGame(); // Generate a new game setup if nothing is saved
+        newGame();
     }
     showPrevGuesses();
     showGuess();
@@ -138,15 +138,7 @@ function setUpNewGame(data) {
     table.innerHTML = htmlContent;
     localStorage.setItem('triviaCategories', JSON.stringify(data));
 }
-function clearselection(){
-    selectedContents.forEach(function(item){
-        var td = findTableCell(table, item);
-        if (td) {
-            selectWord(td);
-        }
-    });
-    selectedContents = [];
-}
+
 function displaytable(shuffledarray) {
     const table = document.getElementById('table');
     table.innerHTML = ''; 
@@ -218,8 +210,8 @@ function submitGuess() {
         });
     });
 
-    let maxCount = Math.max(...Object.values(correctCounts)); // Find the maximum count
-    let maxCategory = Object.keys(correctCounts).find(key => correctCounts[key] === maxCount); // Find the category with the maximum count
+    let maxCount = Math.max(...Object.values(correctCounts));
+    let maxCategory = Object.keys(correctCounts).find(key => correctCounts[key] === maxCount);
 
     incrementGuess();
 
@@ -234,13 +226,23 @@ function submitGuess() {
                 return { ...category, words: category.words.filter(word => !selectedContents.includes(word)) };
             }
             return category;
-        }).filter(category => category.words.length > 0); // Remove categories that are now empty
+        }).filter(category => category.words.length > 0);
 
         localStorage.setItem('triviaCategories', JSON.stringify({ categories: categories }));
         setUpNewGame({ categories: categories });
     }
-    clearselection();
+
+    resetSelections(); 
 }
+
+function resetSelections() {
+    selectedContents = []; 
+    document.querySelectorAll('.selected').forEach(td => {
+        td.classList.remove('selected'); 
+    });
+    document.getElementById("selected-guess").innerText = "Selected Content: ";
+}
+
 
     
 
@@ -294,9 +296,7 @@ function updatepreviousGuess(strarray){
 function showPrevGuesses() {
     var previousGuess = localStorage.getItem('previousGuess');
     var list = document.getElementById("previous-guesses");
-    list.innerHTML = ''; // Clear the list before adding new items
-
-    // Split the previousGuess string into an array of individual guesses
+    list.innerHTML = ''; 
     var guesses = previousGuess.split("|");
 
     // Loop through the array of guesses and add each one as a list item
@@ -368,6 +368,6 @@ function shuffle() {
         shuffleArray(randomarray); 
         displaytable(randomarray);
         // setUpNewGame(categories); 
-        clearselection();
+        resetSelections();
     }
 }
