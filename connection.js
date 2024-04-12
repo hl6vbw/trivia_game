@@ -182,26 +182,24 @@ function setUpNewGame(data) {
     table.innerHTML = htmlContent;
     localStorage.setItem('triviaCategories', JSON.stringify(data));
 }
-
 function displaytable(shuffledarray) {
     const table = document.getElementById('table');
-    table.innerHTML = ''; 
+    table.innerHTML = '';
     let htmlContent = '<tbody>';
-    var ind = 0;
 
-    // Removed the automatic shuffling here
-    for (let i = 0; i < 4; i++) {
-        htmlContent += '<tr>';
-        for (let j = 0; j < 4; j++) {
-            htmlContent += `<td class="red-line" onclick="selectWord(this)">${shuffledarray[ind]}</td>`;
-            ind += 1;
+    if (shuffledarray.length > 0) {
+        for (let i = 0; i < 4; i++) {
+            htmlContent += '<tr>';
+            for (let j = 0; j < 4 && shuffledarray.length > i * 4 + j; j++) {
+                htmlContent += `<td class="red-line" onclick="selectWord(this)">${shuffledarray[i * 4 + j]}</td>`;
+            }
+            htmlContent += '</tr>';
         }
-        htmlContent += '</tr>'; 
+    } else {
+        htmlContent += '<tr><td colspan="4">No more words available</td></tr>';
     }
     htmlContent += '</tbody>';
-    
     table.innerHTML = htmlContent;
-    localStorage.setItem('shuffledarray', JSON.stringify(shuffledarray));
 }
 
 var selectedContents = [];
@@ -236,7 +234,8 @@ function selectWord(td) {
 //     });
 //     content = content.replace(/, $/, '');
 // }
-        
+  
+
 function submitGuess() {
     var categories = JSON.parse(localStorage.getItem('triviaCategories')).categories;
     var correctCounts = {};
@@ -300,6 +299,7 @@ function submitGuess() {
 
     resetSelections(); 
 }
+
 
 function resetSelections() {
     selectedContents = []; 
@@ -382,7 +382,6 @@ function clearHistory() {
     localStorage.removeItem('guess'); 
     localStorage.removeItem('previousGuess'); 
 
-
     document.getElementById('guess-count').textContent = '0'; 
     document.getElementById('previous-guesses').innerHTML = '';
     
@@ -414,26 +413,18 @@ function shuffleArray(array) {
 }
 
 function shuffle() {
-    var randomarray = [];
-    const categories = JSON.parse(localStorage.getItem('triviaCategories'));
-    // if (categories) {
-    //     categories.categories.forEach(category => {
-            
-    //         shuffleArray(category.words); 
-    //     });
-    //     setUpNewGame(categories); 
-    // }
-    if (categories) {
-        categories.categories.forEach(category => {
-            category.words.forEach(function(word){
+    var categories = JSON.parse(localStorage.getItem('triviaCategories')).categories;
+    if (categories.length > 0) {
+        var randomarray = [];
+        categories.forEach(category => {
+            category.words.forEach(function(word) {
                 randomarray.push(word);
-            })
-            
-            
+            });
         });
-        shuffleArray(randomarray); 
+        shuffleArray(randomarray);
         displaytable(randomarray);
-        // setUpNewGame(categories); 
         resetSelections();
+    } else {
+        showMessage('No more words to shuffle.');
     }
 }
