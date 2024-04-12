@@ -210,8 +210,8 @@ function submitGuess() {
         });
     });
 
-    let maxCount = Math.max(...Object.values(correctCounts)); // Find the maximum count
-    let maxCategory = Object.keys(correctCounts).find(key => correctCounts[key] === maxCount); // Find the category with the maximum count
+    let maxCount = Math.max(...Object.values(correctCounts));
+    let maxCategory = Object.keys(correctCounts).find(key => correctCounts[key] === maxCount);
 
     incrementGuess();
 
@@ -226,12 +226,23 @@ function submitGuess() {
                 return { ...category, words: category.words.filter(word => !selectedContents.includes(word)) };
             }
             return category;
-        }).filter(category => category.words.length > 0); // Remove categories that are now empty
+        }).filter(category => category.words.length > 0);
 
         localStorage.setItem('triviaCategories', JSON.stringify({ categories: categories }));
         setUpNewGame({ categories: categories });
     }
+
+    resetSelections(); 
 }
+
+function resetSelections() {
+    selectedContents = []; 
+    document.querySelectorAll('.selected').forEach(td => {
+        td.classList.remove('selected'); 
+    });
+    document.getElementById("selected-guess").innerText = "Selected Content: ";
+}
+
 
     
 
