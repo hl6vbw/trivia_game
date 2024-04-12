@@ -120,15 +120,13 @@ function newGame() {
 
 // }
 
-
-function setUpNewGame(categories) {
+function setUpNewGame(data) {
+    const categories = data.categories;
     const table = document.getElementById('table');
     table.innerHTML = ''; 
     let htmlContent = '<tbody>';
 
-    // Removed the automatic shuffling here
-
-    categories.categories.forEach((category, index) => {
+    categories.forEach((category, index) => {
         htmlContent += '<tr>'; 
         category.words.forEach(word => {
             htmlContent += `<td class="red-line" onclick="selectWord(this)">${word}</td>`;
@@ -138,7 +136,7 @@ function setUpNewGame(categories) {
 
     htmlContent += '</tbody>';
     table.innerHTML = htmlContent;
-    localStorage.setItem('triviaCategories', JSON.stringify(categories));
+    localStorage.setItem('triviaCategories', JSON.stringify(data));
 }
 
 function displaytable(shuffledarray) {
@@ -166,6 +164,8 @@ var selectedContents = [];
 
 function selectWord(td) {
     if (td.classList.contains('selected')) {
+        // Remove the selected table only if user guesses the answer right
+        
         td.classList.remove('selected');
         var index = selectedContents.indexOf(td.textContent);
         if (index !== -1) {
@@ -194,51 +194,45 @@ function selectWord(td) {
         
 function submitGuess() {
     var categories = JSON.parse(localStorage.getItem('triviaCategories')).categories;
-    // var categories = [];
-    var correct = {};
-    var max = 0;
-    var maxcategory = '';
+    var correctCounts = {};
     var message = document.getElementById("message");
     var strarray = selectedContents.join(" ");
-  
-    // try {
-    //     categories = JSON.parse(categoriesData).categories;
-    // } catch (error) {
-    //     console.error('Error parsing triviaCategories:', error);
-    // }
+
     updatepreviousGuess(strarray);
-    incrementGuess();
-    if(selectedContents && categories){
-        
-        categories.forEach(function(category) {
-            correct[category.category] = 0;
-            category.words.forEach(word => {
-                if (selectedContents.includes(word)) {
-                    correct[category.category] += 1;
-                }
-            });
+
+    categories.forEach(function(category) {
+        correctCounts[category.category] = 0;
+        category.words.forEach(word => {
+            if (selectedContents.includes(word)) {
+                correctCounts[category.category] += 1;
+            }
         });
-        max = Math.max(...Object.values(correct)); // Find the maximum count
-        maxcategory = Object.keys(correct).find(key => correct[key] === max); // Find the category with the maximum count
-        
-        
-        if(max <=1){
-            message.innerHTML = 'None of yoour choices were in the same category';
-        }else if(max<4){
-            message.innerHTML = max.toString() + ' are in the same category';
-        }else if(max==4){
-            message.innerHTML = 'Well done';
-            categories.forEach(function(category) {
-                if (category.category === maxcategory) {
-                    category.words = []; // Remove all words from the category
-                }
-            });
-            localStorage.setItem('triviaCategories', JSON.stringify(categories));
-    
-        }
-        
+    });
+
+    let maxCount = Math.max(...Object.values(correctCounts)); // Find the maximum count
+    let maxCategory = Object.keys(correctCounts).find(key => correctCounts[key] === maxCount); // Find the category with the maximum count
+
+    incrementGuess();
+
+    if (maxCount <= 1) {
+        message.innerHTML = 'None of your choices were in the same category';
+    } else if (maxCount < 4) {
+        message.innerHTML = maxCount.toString() + ' of your choices are in the same category';
+    } else if (maxCount == 4) {
+        message.innerHTML = 'Well done! Removing correct selections...';
+        categories = categories.map(category => {
+            if (category.category === maxCategory) {
+                return { ...category, words: category.words.filter(word => !selectedContents.includes(word)) };
+            }
+            return category;
+        }).filter(category => category.words.length > 0); // Remove categories that are now empty
+
+        localStorage.setItem('triviaCategories', JSON.stringify({ categories: categories }));
+        setUpNewGame({ categories: categories });
     }
-    selectedContents = [];
+}
+
+    
 
     
   // selectedContents.forEach(function(item){
@@ -249,7 +243,7 @@ function submitGuess() {
   // })
   // selectedContents = [];
     
-}
+
 
 function incrementGuess(){
   var guess = localStorage.getItem('guess');
