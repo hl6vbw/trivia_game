@@ -164,23 +164,27 @@ var selectedContents = [];
 
 function selectWord(td) {
     if (td.classList.contains('selected')) {
-        // Remove the selected table only if user guesses the answer right
-        
+        // Deselect the word and remove from the selected contents array
         td.classList.remove('selected');
         var index = selectedContents.indexOf(td.textContent);
         if (index !== -1) {
             selectedContents.splice(index, 1);
         }
     } else {
-        td.classList.add('selected');
-        selectedContents.push(td.textContent);
+        // Only add new selections if fewer than four have been made
+        if (selectedContents.length < 4) {
+            td.classList.add('selected');
+            selectedContents.push(td.textContent);
+        } else {
+            // Optionally display a message to the user
+            showMessage('You can select only up to four words.');
+        }
     }
 
-    var cellText = td.textContent;
+    // Update the displayed text of selected contents
     document.getElementById("selected-guess").innerText = "Selected Content: " +  selectedContents.join(', ');
-
-    // document.getElementById("guesses").value = JSON.stringify(selectedContents);
 }
+
 
 // function updateSelectedGuess() {
 //     const selectedWords = document.querySelectorAll('.selected');
