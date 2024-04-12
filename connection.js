@@ -76,73 +76,44 @@ async function getRandomCategories(callback) {
 
 document.addEventListener('DOMContentLoaded', function() {
 
-    const savedCategories = localStorage.getItem('triviaCategories');
-    
-    
-    if (savedCategories) {
-        setUpNewGame(JSON.parse(savedCategories));
+    if (localStorage.getItem('triviaCategories')) {
+        setUpNewGame(JSON.parse(localStorage.getItem('triviaCategories')));
     } else {
         newGame();
     }
-    showPrevGuesses();
-    showGuess();
+    displayStats();
 });
 
 function newGame() {
-    var guess = localStorage.getItem('guess');
-    var winStreak = localStorage.getItem('winStreak');
-    // var numgames = localStorage.getItem('numgames');
+    const gamenums = parseInt(localStorage.getItem('gamenums') || 0) + 1;
+    localStorage.setItem('gamenums', gamenums);
 
-    var gamenums = localStorage.getItem('gamenums');
-    var gamenums = parseInt(gamenums);
-    if (isNaN(gamenums)) {
-        gamenums = 0;
-    }
-    var incrementednum = gamenums + 1;
-    localStorage.setItem('gamenums', incrementednum);
-
-    
-    // var average = localStorage.getItem('average');
-    // var average = parseInt(average);
-    // if (isNaN(average)) {
-    //     average = 0;
-    // }
-    // var averagetotal = average + parseInt(guess);
-    // localStorage.setItem('average', averagetotal);
-    // var averageguess = (averagetotal / incrementednum)
-
-    
     localStorage.removeItem('triviaCategories');
     localStorage.removeItem('previousGuess');
     localStorage.setItem('guess', 0);
     localStorage.removeItem('winStreak');
-    showGuess();
-    
-    var list = document.getElementById("previous-guesses");
-    list.textContent = '';
 
-    
+    document.getElementById("previous-guesses").textContent = '';
+
     getRandomCategories(setUpNewGame);
     displaystats();
 }
 function displaystats() {
-    var average = localStorage.getItem('average');
-    var average = parseInt(average);
-    if (isNaN(average)) {
-        average = 0;
-    }
-    var averagetotal = average + parseInt(guess);
-    localStorage.setItem('average', averagetotal);
-    var averageguess = (averagetotal / incrementednum)
-    var played = document.getElementById("gamesPlayed");
-    played.textContent = localStorage.getItem('gamenums');
-    var won = document.getElementById("gamesWon");
-    won.textContent = localStorage.getItem('gameswon');;
-    var streak = document.getElementById("winStreak");
-    streak.textContent = localStorage.getItem('winStreak');
+    const gamesPlayed = document.getElementById("gamesPlayed");
+    gamesPlayed.textContent = localStorage.getItem('gamenums') || '0';
 
-    var list = document.getElementById("avgGuesses");
-    list.textContent = averageguess;
+    const gamesWon = document.getElementById("gamesWon");
+    gamesWon.textContent = localStorage.getItem('gameswon') || '0';
+
+    const winStreak = document.getElementById("winStreak");
+    winStreak.textContent = localStorage.getItem('winStreak') || '0';
+
+    const avgGuesses = document.getElementById("avgGuesses");
+    const guesses = parseInt(localStorage.getItem('average') || 0);
+    const guess = parseInt(localStorage.getItem('guess') || 0);
+    const numGames = parseInt(localStorage.getItem('gamenums') || 1);
+    avgGuesses.textContent = ((guess+guesses) / numGames).toFixed(2);
+    localStorage.setItem('average', (guess+guesses));
     
 }
 // function setUpNewGame(categories) {
@@ -381,13 +352,9 @@ function showPrevGuesses() {
 
 
 function clearHistory() {
-    localStorage.removeItem('guess'); 
-    localStorage.removeItem('previousGuess'); 
-
-    document.getElementById('guess-count').textContent = '0'; 
+    localStorage.clear();
+    document.getElementById('guess-count').textContent = '0';
     document.getElementById('previous-guesses').innerHTML = '';
-    
-    // Display a message to the user indicating the history has been cleared
     showMessage('Game history cleared.');
 }
 
