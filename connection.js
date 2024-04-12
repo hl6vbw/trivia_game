@@ -41,6 +41,7 @@
 //     });
 // }
 
+//for local servers reads data.json
 function queryCategories() {
     return new Promise(resolve => {
         fetch('data.json') 
