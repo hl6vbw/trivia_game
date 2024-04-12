@@ -95,21 +95,21 @@ function newGame() {
 
     var gamenums = localStorage.getItem('gamenums');
     var gamenums = parseInt(gamenums);
-    if (isNaN(gamenums)) {
-        gamenums = 0;
-    }
+    // if (isNaN(gamenums)) {
+    //     gamenums = 0;
+    // }
     var incrementednum = gamenums + 1;
     localStorage.setItem('gamenums', incrementednum);
 
     
-    // var average = localStorage.getItem('average');
-    // var average = parseInt(average);
-    // if (isNaN(average)) {
-    //     average = 0;
-    // }
-    // var averagetotal = average + parseInt(guess);
-    // localStorage.setItem('average', averagetotal);
-    // var averageguess = (averagetotal / incrementednum)
+    var average = localStorage.getItem('average');
+    var average = parseInt(average);
+    if (isNaN(average)) {
+        average = 0;
+    }
+    var averagetotal = average + parseInt(guess);
+    localStorage.setItem('average', averagetotal);
+    var averageguess = (averagetotal / incrementednum)
 
     
     localStorage.removeItem('triviaCategories');
@@ -121,9 +121,18 @@ function newGame() {
     var list = document.getElementById("previous-guesses");
     list.textContent = '';
 
-    
+    var averageguess = (averagetotal / incrementednum)
+    var played = document.getElementById("gamesPlayed");
+    played.textContent = localStorage.getItem('gamenums');
+    var won = document.getElementById("gamesWon");
+    won.textContent = localStorage.getItem('gameswon');;
+    var streak = document.getElementById("winStreak");
+    streak.textContent = localStorage.getItem('winStreak');
+
+    var list = document.getElementById("avgGuesses");
+    list.textContent = averageguess;
     getRandomCategories(setUpNewGame);
-    displaystats();
+    
 }
 function displaystats() {
     var average = localStorage.getItem('average');
@@ -273,32 +282,70 @@ function submitGuess() {
             return category;
         }).filter(category => category.words.length > 0);
         localStorage.setItem('triviaCategories', JSON.stringify({ categories: categories }));
-        if(categories.length === 0){
-            var gameswon = localStorage.getItem('gameswon');
-            var gameswon = parseInt(gameswon);
-            if (isNaN(gameswon)) {
-                gameswon = 0;
-            }
-            var incrementednum = gameswon + 1;
-            localStorage.setItem('gameswon', incrementednum);
+        // if(categories.length === 0){
+        //     var gameswon = localStorage.getItem('gameswon');
+        //     var gameswon = parseInt(gameswon);
+        //     if (isNaN(gameswon)) {
+        //         gameswon = 0;
+        //     }
+        //     var incrementednum = gameswon + 1;
+        //     localStorage.setItem('gameswon', incrementednum);
     
-            var winStreak = localStorage.getItem('winStreak');
-            var winStreak = parseInt(winStreak);
-            if (isNaN(winStreak)) {
-                winStreak = 0;
-            }
-            var incrementedwin = winStreak + 1;
-            localStorage.setItem('winStreak', incrementedwin);
+        //     var winStreak = localStorage.getItem('winStreak');
+        //     var winStreak = parseInt(winStreak);
+        //     if (isNaN(winStreak)) {
+        //         winStreak = 0;
+        //     }
+        //     var incrementedwin = winStreak + 1;
+        //     localStorage.setItem('winStreak', incrementedwin);
             
-            getRandomCategories(setUpNewGame);
-            displaystats();
+        //     getRandomCategories(setUpNewGame);
             
-        }
-        setUpNewGame({ categories: categories });
+            
+        // }
+        
         
     }
 
     resetSelections(); 
+    if(categories.length === 0){
+        var gameswon = localStorage.getItem('gameswon');
+        var gameswon = parseInt(gameswon);
+        if (isNaN(gameswon)) {
+            gameswon = 0;
+        }
+        var incrementednum = gameswon + 1;
+        localStorage.setItem('gameswon', incrementednum);
+
+        var winStreak = localStorage.getItem('winStreak');
+        var winStreak = parseInt(winStreak);
+        if (isNaN(winStreak)) {
+            winStreak = 0;
+        }
+        var incrementedwin = winStreak + 1;
+        localStorage.setItem('winStreak', incrementedwin);
+        
+        getRandomCategories(setUpNewGame);
+        var average = localStorage.getItem('average');
+        var average = parseInt(average);
+        if (isNaN(average)) {
+            average = 0;
+        }
+        var averagetotal = average + parseInt(guess);
+        localStorage.setItem('average', averagetotal);
+        var averageguess = (averagetotal / incrementednum)
+        var played = document.getElementById("gamesPlayed");
+        played.textContent = localStorage.getItem('gamenums');
+        var won = document.getElementById("gamesWon");
+        won.textContent = localStorage.getItem('gameswon');;
+        var streak = document.getElementById("winStreak");
+        streak.textContent = localStorage.getItem('winStreak');
+
+        var list = document.getElementById("avgGuesses");
+        list.textContent = averageguess;
+    }else{
+        setUpNewGame({ categories: categories });
+    }
     
 }
 
