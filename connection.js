@@ -102,14 +102,14 @@ function newGame() {
     localStorage.setItem('gamenums', incrementednum);
 
     
-    var average = localStorage.getItem('average');
-    var average = parseInt(average);
-    if (isNaN(average)) {
-        average = 0;
-    }
-    var averagetotal = average + parseInt(guess);
-    localStorage.setItem('average', averagetotal);
-    var averageguess = (averagetotal / incrementednum)
+    // var average = localStorage.getItem('average');
+    // var average = parseInt(average);
+    // if (isNaN(average)) {
+    //     average = 0;
+    // }
+    // var averagetotal = average + parseInt(guess);
+    // localStorage.setItem('average', averagetotal);
+    // var averageguess = (averagetotal / incrementednum)
 
     
     localStorage.removeItem('triviaCategories');
@@ -119,10 +119,11 @@ function newGame() {
     showGuess();
     
     var list = document.getElementById("previous-guesses");
-    list.innerHTML = '';
+    list.textContent = '';
 
-    displaystats();
+    
     getRandomCategories(setUpNewGame);
+    displaystats();
 }
 function displaystats() {
     var average = localStorage.getItem('average');
@@ -134,14 +135,14 @@ function displaystats() {
     localStorage.setItem('average', averagetotal);
     var averageguess = (averagetotal / incrementednum)
     var played = document.getElementById("gamesPlayed");
-    played.innerHTML = localStorage.getItem('gamenums');
+    played.textContent = localStorage.getItem('gamenums');
     var won = document.getElementById("gamesWon");
-    won.innerHTML = localStorage.getItem('gameswon');;
+    won.textContent = localStorage.getItem('gameswon');;
     var streak = document.getElementById("winStreak");
-    streak.innerHTML = localStorage.getItem('winStreak');
+    streak.textContent = localStorage.getItem('winStreak');
 
     var list = document.getElementById("avgGuesses");
-    list.innerHTML = localStorage.getItem('average');
+    list.textContent = averageguess;
     
 }
 // function setUpNewGame(categories) {
@@ -272,7 +273,6 @@ function submitGuess() {
             return category;
         }).filter(category => category.words.length > 0);
         localStorage.setItem('triviaCategories', JSON.stringify({ categories: categories }));
-
         if(categories.length === 0){
             var gameswon = localStorage.getItem('gameswon');
             var gameswon = parseInt(gameswon);
@@ -289,15 +289,17 @@ function submitGuess() {
             }
             var incrementedwin = winStreak + 1;
             localStorage.setItem('winStreak', incrementedwin);
-            displaystats();
+            
             getRandomCategories(setUpNewGame);
+            displaystats();
+            
         }
-
-        
         setUpNewGame({ categories: categories });
+        
     }
 
     resetSelections(); 
+    
 }
 
 
