@@ -89,17 +89,61 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function newGame() {
+    var guess = localStorage.getItem('guess');
+    var winStreak = localStorage.getItem('winStreak');
+    // var numgames = localStorage.getItem('numgames');
+
+    var gamenums = localStorage.getItem('gamenums');
+    var gamenums = parseInt(gamenums);
+    if (isNaN(gamenums)) {
+        gamenums = 0;
+    }
+    var incrementednum = gamenums + 1;
+    localStorage.setItem('gamenums', incrementednum);
+
+    
+    var average = localStorage.getItem('average');
+    var average = parseInt(average);
+    if (isNaN(average)) {
+        average = 0;
+    }
+    var averagetotal = average + parseInt(guess);
+    localStorage.setItem('average', averagetotal);
+    var averageguess = (averagetotal / incrementednum)
+
+    
     localStorage.removeItem('triviaCategories');
     localStorage.removeItem('previousGuess');
-    localStorage.removeItem('guess');
+    localStorage.setItem('guess', 0);
+    localStorage.removeItem('winStreak');
     showGuess();
+    
     var list = document.getElementById("previous-guesses");
     list.innerHTML = '';
-    var guess = localStorage.getItem('guess');
-    var numgames = localStorage.getItem('numgames');
+
+    displaystats();
     getRandomCategories(setUpNewGame);
 }
+function displaystats() {
+    var average = localStorage.getItem('average');
+    var average = parseInt(average);
+    if (isNaN(average)) {
+        average = 0;
+    }
+    var averagetotal = average + parseInt(guess);
+    localStorage.setItem('average', averagetotal);
+    var averageguess = (averagetotal / incrementednum)
+    var played = document.getElementById("gamesPlayed");
+    played.innerHTML = localStorage.getItem('gamenums');
+    var won = document.getElementById("gamesWon");
+    won.innerHTML = localStorage.getItem('gameswon');;
+    var streak = document.getElementById("winStreak");
+    streak.innerHTML = localStorage.getItem('winStreak');
 
+    var list = document.getElementById("avgGuesses");
+    list.innerHTML = localStorage.getItem('average');
+    
+}
 // function setUpNewGame(categories) {
 //     const table = document.getElementById('table');
 //     table.innerHTML = ''; 
@@ -200,6 +244,7 @@ function submitGuess() {
     var strarray = selectedContents.join(" ");
 
     updatepreviousGuess(strarray);
+    incrementGuess();
 
     categories.forEach(function(category) {
         correctCounts[category.category] = 0;
@@ -213,7 +258,7 @@ function submitGuess() {
     let maxCount = Math.max(...Object.values(correctCounts));
     let maxCategory = Object.keys(correctCounts).find(key => correctCounts[key] === maxCount);
 
-    incrementGuess();
+    
 
     if (maxCount <= 1) {
         message.innerHTML = 'None of your choices were in the same category';
@@ -227,8 +272,29 @@ function submitGuess() {
             }
             return category;
         }).filter(category => category.words.length > 0);
-
         localStorage.setItem('triviaCategories', JSON.stringify({ categories: categories }));
+
+        if(categories.length === 0){
+            var gameswon = localStorage.getItem('gameswon');
+            var gameswon = parseInt(gameswon);
+            if (isNaN(gameswon)) {
+                gameswon = 0;
+            }
+            var incrementednum = gameswon + 1;
+            localStorage.setItem('gameswon', incrementednum);
+    
+            var winStreak = localStorage.getItem('winStreak');
+            var winStreak = parseInt(winStreak);
+            if (isNaN(winStreak)) {
+                winStreak = 0;
+            }
+            var incrementedwin = winStreak + 1;
+            localStorage.setItem('winStreak', incrementedwin);
+            displaystats();
+            getRandomCategories(setUpNewGame);
+        }
+
+        
         setUpNewGame({ categories: categories });
     }
 
