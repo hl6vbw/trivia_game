@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         newGame();
     }
-    displayStats();
+    displaystats();
 });
 
 function newGame() {
@@ -357,6 +357,7 @@ function clearHistory() {
     document.getElementById('guess-count').textContent = '0';
     document.getElementById('previous-guesses').innerHTML = '';
     showMessage('Game history cleared.');
+    displaystats();
 }
 
 function showMessage(message) {
