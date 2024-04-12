@@ -138,7 +138,15 @@ function setUpNewGame(data) {
     table.innerHTML = htmlContent;
     localStorage.setItem('triviaCategories', JSON.stringify(data));
 }
-
+function clearselection(){
+    selectedContents.forEach(function(item){
+        var td = findTableCell(table, item);
+        if (td) {
+            selectWord(td);
+        }
+    });
+    selectedContents = [];
+}
 function displaytable(shuffledarray) {
     const table = document.getElementById('table');
     table.innerHTML = ''; 
@@ -231,6 +239,7 @@ function submitGuess() {
         localStorage.setItem('triviaCategories', JSON.stringify({ categories: categories }));
         setUpNewGame({ categories: categories });
     }
+    clearselection();
 }
 
     
@@ -297,10 +306,10 @@ function showPrevGuesses() {
         list.appendChild(newitem);
     });
 }
-function shuffle(){
+// function shuffle(){
 
-    selectedGuess.textContent = content;
-}
+//     selectedGuess.textContent = content;
+// }
 
 
 function clearHistory() {
@@ -359,5 +368,6 @@ function shuffle() {
         shuffleArray(randomarray); 
         displaytable(randomarray);
         // setUpNewGame(categories); 
+        clearselection();
     }
 }
