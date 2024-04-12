@@ -12,48 +12,50 @@
  * asynchronously, so you should treat your function like you would an event
  * handler.
  */
-// function queryCategories() {
-//     return new Promise( resolve => {
-//             // instantiate the object
-//             var ajax = new XMLHttpRequest();
-//             // open the request
-//             //ajax.open("GET", "https://cs4640.cs.virginia.edu/homework/connections.php", true);
-//             //ajax.open("GET", "/data.json", true);
-//             // ask for a specific response
-//             ajax.responseType = "json";
-//             // send the request
-//             ajax.send(null);
-            
-//             // What happens if the load succeeds
-//             ajax.addEventListener("load", function() {
-//                 // Return the word as the fulfillment of the promise 
-//                 if (this.status == 200) { // worked 
-//                     resolve(this.response);
-//                 } else {
-//                     console.log("When trying to get a new set of categories, the server returned an HTTP error code.");
-//                 }
-//             });
-            
-//             // What happens on error
-//             ajax.addEventListener("error", function() {
-//                 console.log("When trying to get a new set of categories, the connection to the server failed.");
-//             });
-//     });
-// }
-
 function queryCategories() {
-    return new Promise(resolve => {
-        fetch('data.json') 
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('error');
+    return new Promise( resolve => {
+            // instantiate the object
+            var ajax = new XMLHttpRequest();
+            // open the request
+            //ajax.open("GET", "https://cs4640.cs.virginia.edu/homework/connections.php", true);
+            //ajax.open("GET", "/data.json", true);
+            // ask for a specific response
+            ajax.responseType = "json";
+            // send the request
+            ajax.send(null);
+            
+            // What happens if the load succeeds
+            ajax.addEventListener("load", function() {
+                // Return the word as the fulfillment of the promise 
+                if (this.status == 200) { // worked 
+                    resolve(this.response);
+                } else {
+                    console.log("When trying to get a new set of categories, the server returned an HTTP error code.");
                 }
-                return response.json();
-            })
-            .then(data => resolve(data))
-            .catch(error => console.error('Error while fetching categories:', error));
+            });
+            
+            // What happens on error
+            ajax.addEventListener("error", function() {
+                console.log("When trying to get a new set of categories, the connection to the server failed.");
+            });
     });
 }
+
+//THIS IS FOR LOCAL RUN WHERE GET DATA.JSON
+
+// function queryCategories() {
+//     return new Promise(resolve => {
+//         fetch('data.json') 
+//             .then(response => {
+//                 if (!response.ok) {
+//                     throw new Error('error');
+//                 }
+//                 return response.json();
+//             })
+//             .then(data => resolve(data))
+//             .catch(error => console.error('Error while fetching categories:', error));
+//     });
+// }
 
 /**
  * This is the function you should call to request a new word.
