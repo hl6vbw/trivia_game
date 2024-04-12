@@ -75,14 +75,14 @@ async function getRandomCategories(callback) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Load game from Local Storage if available
+
     const savedCategories = localStorage.getItem('triviaCategories');
     
     
     if (savedCategories) {
         setUpNewGame(JSON.parse(savedCategories));
     } else {
-        newGame(); // Generate a new game setup if nothing is saved
+        newGame();
     }
     showPrevGuesses();
     showGuess();
@@ -285,9 +285,7 @@ function updatepreviousGuess(strarray){
 function showPrevGuesses() {
     var previousGuess = localStorage.getItem('previousGuess');
     var list = document.getElementById("previous-guesses");
-    list.innerHTML = ''; // Clear the list before adding new items
-
-    // Split the previousGuess string into an array of individual guesses
+    list.innerHTML = ''; 
     var guesses = previousGuess.split("|");
 
     // Loop through the array of guesses and add each one as a list item
